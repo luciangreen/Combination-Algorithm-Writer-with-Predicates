@@ -17,15 +17,16 @@ None
 
 * Download this repository.
 * In SWI-Prolog, enter:
+```
 ['caw5 copy 12'].
 ['listprologinterpreter1listrecursion4 copy 52'].
 ['listprologinterpreter3preds5 copy 52'].
-
+```
 * Running
 Example
-caw00(off,function3,[],5,7,[[a,1],[b,1]],[[c,2]],[],Program),writeln(Program).
+`caw00(off,function3,[],5,7,[[a,1],[b,1]],[[c,2]],[],Program),writeln(Program).`
 Example Output
-[[function3,[a,b,c],:-,[[function1,[b,b,d]],[=,[c,d]]]],[function1,[a,b,c],:-,[[c,is,a+b]]]]
+`[[function3,[a,b,c],:-,[[function1,[b,b,d]],[=,[c,d]]]],[function1,[a,b,c],:-,[[c,is,a+b]]]]`
 
 **Note:**
 
