@@ -2,15 +2,21 @@
 
 /**
 
-caw00(off,function3,[],5,7,[[a,1],[b,1]],[[c,2]],[],Program),writeln(Program).
+
+caw00(off,function3,[],5,7,[[a,1],[b,1]],[[[c,2]],[[c,2]]],[],Program),writeln(Program).
+x
+
+caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,1]],fail]],[],Program),writeln(Program).
+
+VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail
 
 [[function3,[a,b,c],:-,[[function1,[b,b,d]],[=,[c,d]]]],[function1,[a,b,c],:-,[[c,is,a+b]]]]
 
 **/
-
+%% *** write ! in case takes too long to run
 :- include('algdict.pl').
 
-caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,InputVarList,OutputVarList,Program1,Program2) :-
+caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2) :-
 	test(PredicatesA),
 	split3(PredicatesA,[],Rules2),
 	split2(PredicatesA,[],Predicates),
@@ -21,9 +27,15 @@ caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,InputVarList,OutputVarList,
     	assertz(debug(Debug)),
 	retractall(totalvars(_)),
     	assertz(totalvars(TotalVars)),
-	caw0(Predicates,PredicateName,Rules3,MaxLength,InputVarList,OutputVarList,Program1,Program2).
+	VarLists=[VarLists1|VarLists2],
+	caw0(Predicates,PredicateName,Rules3,MaxLength,
+		VarLists1,Program1,Program2),
+	aggregate_all(count,(member(Item,VarLists2),
+	caw0(Predicates,PredicateName,Rules3,MaxLength,
+		Item,Program1,Program2)),Count),length(VarLists2,Count). %%Predicates->PredicatesA x
 
-caw0(Algorithms,PredicateName,Rules,MaxLength,InputVarList,OutputVarList,Program1,Program2) :-
+caw0(Algorithms,PredicateName,Rules,MaxLength,VarLists,Program1,Program2) :-
+	VarLists=[InputVarList,OutputVarList,Positivity],
 	varnames(InputVarList,[],InputVars,[],InputValues),
 	varnames(OutputVarList,[],OutputVars,[],_OutputValues),
 	retractall(outputvars(_)),
@@ -34,9 +46,9 @@ append(InputVars,OutputVars,Vars11),
 	append(InputValues,OutputVars,Vars2),
 	%%append(InputValues,OutputValues,Values),
 	Query=[PredicateName,Vars2],
-	caw(Algorithms,Query,PredicateName,Rules,MaxLength,Vars11,InputVars,InputVars,_,OutputVarList,OutputVars,Program1,Program2).
-caw(_,_,_,_,0,_,_,_,_,_,_,_,_) :- fail, !.
-caw(Algorithms,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputVars2,_InputVarsa,OutputVarList,OutputVars,Program1,Program2) :-
+	caw(Algorithms,Query,PredicateName,Rules,MaxLength,Vars11,InputVars,InputVars,_,OutputVarList,OutputVars,Positivity,Program1,Program2).
+caw(_,_,_,_,0,_,_,_,_,_,_,_,_,_) :- fail, !.
+caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputVars2,_InputVarsa,VarLists,OutputVars,Positivity,Program1,Program2) :-
 	addrules(InputVars2,OutputVars,OutputVars,[],PenultimateVars,[],Program3),
 %%writeln([addrules(InputVars2,OutputVars,OutputVars,[],PenultimateVars,[],Program3)]),	
 	optimise(Program1,InputVars1,_InputVars3,PenultimateVars,Program4), %% IV2->3
@@ -48,13 +60,19 @@ caw(Algorithms,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputVa
                 Program5
         ]
         ],
-	append(Program22,Algorithms,Program2),
+	eliminate_unused_predicates(Program22,Algorithms1,Algorithms2),
+	append(Program22,Algorithms2,Program2),
 	debug(Debug),
 	%%writeln([program2,Program2]),
 %%writeln([interpret(Debug,Query,Program2,OutputVarList)]),
-	writeln(interpret(Debug,Query,Program2,OutputVarList)),
-	interpret(Debug,Query,Program2,OutputVarList).
-caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,InputVars3,OutputVarList,OutputVars,Program1,Program4) :-
+	writeln(interpret(Debug,Query,Program2,VarLists)),
+	%%interpret(Debug,Query,Program2,OutputVarList).
+	%%aggregate_all(count,(member(Item,VarLists),
+	(Positivity=true->
+	interpret(Debug,Query,Program2,VarLists);
+	not(interpret(Debug,Query,Program2,VarLists))),!.%%),Count),
+	%%length(OutputVarList,Count),!.
+caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,InputVars3,VarLists,OutputVars,Positivity,Program1,Program4) :-
 %%writeln([caw(Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,OutputVarList,OutputVars,Program1,Program4)]),
 	MaxLength2 is MaxLength - 1,
 	reverse(InputVars2,InputVars5),
@@ -69,7 +87,7 @@ caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2
 %%writeln([inputVars3,InputVars3]),
 %%InputVars2=InputVars3,
 %%writeln([program4,Program4]),
-	caw(Algorithms,Query,PredicateName,Rules,MaxLength2,VarList2,InputVars1,InputVars4,InputVars3,OutputVarList,OutputVars,Program3,Program4).
+	caw(Algorithms,Query,PredicateName,Rules,MaxLength2,VarList2,InputVars1,InputVars4,InputVars3,VarLists,OutputVars,Positivity,Program3,Program4).
 
 varnames([],Vars,Vars,Values,Values) :- !.
 varnames(VarList,Vars1,Vars2,Values1,Values2) :-
@@ -444,3 +462,54 @@ append_list(A,List,B) :-
 	append_list(C,Items,B).
 
 **/
+
+eliminate_unused_predicates(Program1,Algorithms1,Algorithms2) :-
+	%% System calls and mode arities
+	%%System_calls=[[is,1,1],[+,2,1],[=,2,1],[wrap,1,1],
+	%%[unwrap,1,1],[head,1,1],[tail,1,1],[member,1,1],
+	%%[delete,2,1],[append,2,1]], %% Ignore whether system calls are in Program and Algorithm - the interpeter will have detected whether system and user predicates clash earlier
+	%% Find calls in Program
+	find_calls1(Program1,[],Program2),
+	%% Find calls in Algorithm
+	find_calls1(Algorithms1,[],Algorithms3),
+	append(Program2,Algorithms3,Rules),
+	%% Eliminate user predicates mentioned in Program and Algorithms in Algorithms 
+	eliminate_unused_predicates(Rules,Algorithms1,[],
+		Algorithms2).
+	
+find_calls1([],Program,Program) :- !.
+find_calls1(Program1,Program2,Program3) :-
+	Program1=[Program4|Program5],
+	(Program4=[_PredicateName,_,(:-),Program6]->
+	(find_calls2(Program6,[],Program7),
+	append(Program2,Program7,Program8));
+	Program8=Program2),
+	find_calls1(Program5,Program8,Program3).
+	
+find_calls2([],Program,Program) :- !.
+find_calls2(Program1,Program2,Program3) :-
+	Program1=[Line|Program4],
+	(Line=[PredicateName,Arguments]->
+	length(Arguments,ArgumentsLength);
+	(Line=[PredicateName],ArgumentsLength=0)), %% correct syntax is [true] not true
+	Item=[[PredicateName,ArgumentsLength]],
+	append(Program2,Item,Program5),
+	find_calls2(Program4,Program5,Program3).
+
+eliminate_unused_predicates(_Rules,[],Algorithms,Algorithms) :- !.
+eliminate_unused_predicates(Rules,Algorithms1,Algorithms2,Algorithms3) :-
+	Algorithms1=[Algorithms4|Algorithms5],
+	(Algorithms4=[PredicateName,Arguments,(:-),_Program6]->
+	length(Arguments,ArgumentsLength);
+	(Algorithms4=[PredicateName,Arguments2]->
+		length(Arguments2,ArgumentsLength);
+		(Algorithms4=[PredicateName],ArgumentsLength=0))),
+	Item=[PredicateName,ArgumentsLength],
+	(member(Item,Rules)->
+		append(Algorithms2,
+		[Algorithms4],Algorithms6);
+		Algorithms6=Algorithms2),
+	eliminate_unused_predicates(Rules,Algorithms5,Algorithms6,
+		Algorithms3).
+
+	

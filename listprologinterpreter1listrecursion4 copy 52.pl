@@ -314,16 +314,16 @@ interpretstatement1(_F0,_Functions,[variable,[Variable]],Vars,Vars,true,nocut) :
                 (debug(on)->(writeln([call,[variable,[Variable]],"Press c."]),(not(get_single_char(97))->true;abort));true),
                 (debug(on)->(writeln([exit,[variable,[Variable]],"Press c."]),(not(get_single_char(97))->true;abort));true).
 
-interpretstatement1(_F0,_Functions,[Operator,[Variable1,Variable2]],Vars1,Vars2,true,nocut) :-
+interpretstatement1(_F0,_Functions,[Operator,[Variable2,Variable1]],Vars1,Vars2,true,nocut) :- %% V1 is V2
 	isop(Operator),
-	interpretpart(is,Variable1,Variable2,Vars1,Vars2).
+	interpretpart(is,Variable2,Variable1,Vars1,Vars2).
 
-interpretstatement1(_F0,_Functions,[Operator,[Variable1,Variable2]],Vars1,Vars2,true,nocut) :-
+/**interpretstatement1(_F0,_Functions,[Operator,[Variable2,Variable1]],Vars1,Vars2,true,nocut) :- %% swapped is - unused
 %%writeln(31),
         isop(Operator),
         interpretpart(is,Variable2,Variable1,Vars1,Vars2).
-	
-interpretstatement1(_F0,_Functions,[Variable1,is,Variable2+Variable3],Vars1,Vars2,true,nocut) :-
+	**/
+interpretstatement1(_F0,_Functions,[+,[Variable2,Variable3,Variable1]],Vars1,Vars2,true,nocut) :- %% V1 is V2+V3
 %%writeln(4),
         interpretpart(isplus,Variable1,Variable2,Variable3,Vars1,Vars2).
 
@@ -331,7 +331,7 @@ interpretstatement1(_F0,_Functions,[Variable1,is,Variable2+Variable3],Vars1,Vars
 %%writeln(41),
         %%interpretpart(isplus,Variable1,Variable2,Variable3,Vars1,Vars2).
 
-interpretstatement1(_F0,_Functions,[=,[Variable1,[Variable2,Variable3]]],Vars1,Vars2,true,nocut) :-
+interpretstatement1(_F0,_Functions,[=,[Variable2,Variable3,Variable1]],Vars1,Vars2,true,nocut) :- %% V1 = [V2,V3]
 %%writeln(5),
         interpretpart(match,Variable1,Variable2,Variable3,Vars1,Vars2).
 
