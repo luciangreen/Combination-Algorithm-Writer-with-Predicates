@@ -467,7 +467,7 @@ eliminate_unused_predicates(Program1,Algorithms1,Algorithms2) :-
 	%% System calls and mode arities
 	%%System_calls=[[is,1,1],[+,2,1],[=,2,1],[wrap,1,1],
 	%%[unwrap,1,1],[head,1,1],[tail,1,1],[member,1,1],
-	%%[delete,2,1],[append,2,1]], %% Ignore whether system calls are in Program and Algorithm - the interpeter will have detected whether system and user predicates clash earlier
+	%%[delete,2,1],[append,2,1]], %% Ignore whether system calls are in Program and Algorithm - the interpreter will have detected whether system and user predicates clash earlier
 	%% Find calls in Program
 	find_calls1(Program1,[],Program2),
 	%% Find calls in Algorithm
