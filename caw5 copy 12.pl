@@ -2,18 +2,14 @@
 
 /**
 
-
-caw00(off,function3,[],5,7,[[a,1],[b,1]],[[[c,2]],[[c,2]]],[],Program),writeln(Program).
-x
-
 caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,1]],fail]],[],Program),writeln(Program).
 
 VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail
 
-[[function3,[a,b,c],:-,[[function1,[b,b,d]],[=,[c,d]]]],[function1,[a,b,c],:-,[[c,is,a+b]]]]
-
 **/
+
 %% *** write ! in case takes too long to run
+
 :- include('algdict.pl').
 
 caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2) :-

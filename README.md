@@ -24,7 +24,7 @@ None
 ```
 * Running
 Example
-`caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,1]],fail]],[],Program),writeln(Program).`
+`caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,2]],[[c,3]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,3]],fail]],[],Program),writeln(Program).`
 
 VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail.
 Example Output
