@@ -12,7 +12,7 @@ VarLists is in format list of [InputVarList,OutputVarList,Positivity], where the
 
 :- include('algdict.pl').
 
-caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2) :-
+caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2B) :-
 	test(PredicatesA),
 	split3(PredicatesA,[],Rules2),
 	split2(PredicatesA,[],Predicates),
@@ -24,11 +24,13 @@ caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2)
 	retractall(totalvars(_)),
     	assertz(totalvars(TotalVars)),
 	VarLists=[VarLists1|VarLists2],
-	caw0(Predicates,PredicateName,Rules3,MaxLength,
-		VarLists1,Program1,Program2),
+	findall(Program2A,caw0(Predicates,PredicateName,
+		Rules3,MaxLength,
+		VarLists1,Program1,Program2A),Program2),
+	member(Program2B,Program2),
 	aggregate_all(count,(member(Item,VarLists2),
 	caw0(Predicates,PredicateName,Rules3,MaxLength,
-		Item,Program1,Program2)),Count),length(VarLists2,Count). %%Predicates->PredicatesA x
+		Item,Program1,Program2B)),Count),length(VarLists2,Count). %%Predicates->PredicatesA x
 
 caw0(Algorithms,PredicateName,Rules,MaxLength,VarLists,Program1,Program2) :-
 	VarLists=[InputVarList,OutputVarList,Positivity],
