@@ -18,21 +18,26 @@ None
 * Download this repository.
 * In SWI-Prolog, enter:
 ```
-['caw5 copy 12'].
-['listprologinterpreter1listrecursion4 copy 52'].
-['listprologinterpreter3preds5 copy 52'].
+['listprolog'].
 ```
 * Running
 Example
-`caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,2]],[[c,3]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,3]],fail]],[],Program),writeln(Program).`
+`caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],2]],true],[[[[v,a],1],[[v,b],2]],[[[v,c],3]],true],[[[[v,a],1],[[v,b],1]],[[[v,c],1]],fail],[[[[v,a],1],[[v,b],1]],[[[v,c],3]],fail]],[],Program),writeln(Program).`
 
 VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail.
 Example Output
-`[[function3,[a,b,c],:-,[[function1,[b,a,d]],[=,[c,d]]]],[function1,[a,b,c],:-,[[+,[a,b,c]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+`
+Example
+`caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[],Program),writeln(Program).`
+
+Example Output
+`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+`
 
 **Note:**
 
-Use (:-) instead of :-.
+Use ":-" instead of :-.
 
 # Versioning
 
