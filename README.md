@@ -28,12 +28,19 @@ VarLists is in format list of [InputVarList,OutputVarList,Positivity], where the
 Example Output
 `[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
 `
+
 Example
 `caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[],Program),writeln(Program).`
 
 Example Output
 `[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
 `
+
+You can enter a partially complete predicate as the second last argument and the algorithm will complete the algorithm if possible:
+Example
+`caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[[[n,=],[[v,a],[v,b]]]],Program),writeln(Program).`
+Example Output
+`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,=],[[v,a],[v,b]]],[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
 
 **Note:**
 
