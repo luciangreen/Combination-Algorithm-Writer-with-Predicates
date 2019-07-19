@@ -14,9 +14,12 @@ Notes:
 **/
 
 :- include('algdict.pl').
+:- include('remove_duplicate_predicates').
 
 caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2B) :-
-	test(PredicatesA),
+	test(PredicatesA0),
+	%% remove duplicate predicates
+	remvdup(PredicatesA0,PredicatesA),
 	split3(PredicatesA,[],Rules2),
 	split2(PredicatesA,[],Predicates),
 	writeln([Rules2,Predicates]),
