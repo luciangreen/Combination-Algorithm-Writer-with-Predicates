@@ -6,7 +6,7 @@
 interpret(Debug,Query,Functions1,Result) :-
 %%writeln([i1]),
 	convert_to_grammar_part1(Functions1,[],Functions2),
-	writeln(Functions2),
+	%%writeln(Functions2),
 %%writeln(Functions2),
 	interpret1(Debug,Query,Functions2,Functions2,Result),
 	!.

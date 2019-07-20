@@ -14,15 +14,15 @@ Notes:
 **/
 
 :- include('algdict.pl').
-:- include('remove_duplicate_predicates').
+:- include('remove_duplicate_predicates.pl').
 
 caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2B) :-
 	test(PredicatesA0),
 	%% remove duplicate predicates
-	remvdup(PredicatesA0,PredicatesA),
+	remvdup(PredicatesA0,[],PredicatesA),
 	split3(PredicatesA,[],Rules2),
 	split2(PredicatesA,[],Predicates),
-	writeln([Rules2,Predicates]),
+	%%writeln([Rules2,Predicates]),
 	append(Rules1,Rules2,Rules3),
 
 	retractall(debug(_)),
@@ -65,11 +65,14 @@ caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputV
         ]
         ],
 	eliminate_unused_predicates(Program22,Algorithms1,Algorithms2),
+	
+	%%(Program22=[[[n,function0],[[v,a],[v,b],[v,c]],":-",[[[n,function2],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]->writeln(eliminate_unused_predicates(Program22,Algorithms1,Algorithms2));true),
+	
 	append(Program22,Algorithms2,Program2),
 	debug(Debug),
 	%%writeln([program2,Program2]),
 %%writeln([interpret(Debug,Query,Program2,OutputVarList)]),
-	writeln(interpret(Debug,Query,Program2,VarLists)),
+	%%writeln(interpret(Debug,Query,Program2,VarLists)),
 	%%interpret(Debug,Query,Program2,OutputVarList).
 	%%aggregate_all(count,(member(Item,VarLists),
 	(Positivity=true->
@@ -475,23 +478,30 @@ eliminate_unused_predicates(Program1,Algorithms1,Algorithms2) :-
 	%%System_calls=[[is,1,1],[+,2,1],[=,2,1],[wrap,1,1],
 	%%[unwrap,1,1],[head,1,1],[tail,1,1],[member,1,1],
 	%%[delete,2,1],[append,2,1]], %% Ignore whether system calls are in Program and Algorithm - the interpreter will have detected whether system and user predicates clash earlier
+	Program1=[[[n, PredicateName], Arguments, ":-", _Body]],
+	length(Arguments,ArgumentsLength),
+	Start=[[[n,PredicateName],ArgumentsLength]],
 	%% Find calls in Program
-	find_calls1(Program1,[],Program2),
+	find_calls1(Start,Program1,[],Program2),
 	%% Find calls in Algorithm
-	find_calls1(Algorithms1,[],Algorithms3),
+	find_calls1(Program2,Algorithms1,[],Algorithms3),
 	append(Program2,Algorithms3,Rules),
 	%% Eliminate user predicates mentioned in Program and Algorithms in Algorithms 
 	eliminate_unused_predicates(Rules,Algorithms1,[],
 		Algorithms2).
 	
-find_calls1([],Program,Program) :- !.
-find_calls1(Program1,Program2,Program3) :-
+find_calls1(_,[],Program,Program) :- !.
+find_calls1(Program0,Program1,Program2,Program3) :-
 	Program1=[Program4|Program5],
-	(Program4=[[n,_PredicateName],_,":-",Program6]->
+	((Program4=[[n,PredicateName],Arguments,":-",Program6],
+	length(Arguments,ArgumentsLength),
+	Item=[[n,PredicateName],ArgumentsLength],
+	member(Item,Program0))->
 	(find_calls2(Program6,[],Program7),
-	append(Program2,Program7,Program8));
-	Program8=Program2),
-	find_calls1(Program5,Program8,Program3).
+	append(Program2,Program7,Program8),
+	append(Program0,Program7,Program01));
+	(Program8=Program2,Program01=Program0)),
+	find_calls1(Program01,Program5,Program8,Program3).
 	
 find_calls2([],Program,Program) :- !.
 find_calls2(Program1,Program2,Program3) :-

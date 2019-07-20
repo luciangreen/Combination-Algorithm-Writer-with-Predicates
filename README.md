@@ -42,6 +42,19 @@ Example
 Example Output
 `[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,=],[[v,a],[v,b]]],[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
 
+
+Try CAWP regression tests (in cawpverify.pl):
+Example
+`cawptest(off,N,S).`
+Example Output
+```
+[cawptest,1,passed]
+
+[cawptest,2,passed]
+
+N = S, S = 2.
+```
+
 **Note:**
 
 Use ":-" instead of :-.
