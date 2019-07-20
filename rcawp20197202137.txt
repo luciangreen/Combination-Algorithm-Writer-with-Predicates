@@ -1,0 +1,46 @@
+[[[n,function0],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+
+   [1;32mCall: [0m(14) interpret(off, [[n, function0], [471, 692, [v, c]]], [[[n, function0], [[v, a], [v, b], [v, c]], ":-", [[[n|...], [...|...]], [[...|...]|...]]], [[n, function1], [[v, a], [v, b], [v|...]], ":-", [[[...|...]|...]]]], _6038) ? aabort
+[32m% 2,336,662 inferences, 1.162 CPU in 5.592 seconds (21% CPU, 2011284 Lips)
+[0m[32m% Execution Aborted
+[0m['meditationnoreplace'].
+
+
+[31mWarning: /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/rcawp.pl:5:
+	Singleton variables: [N,File2]
+[0m[31mWarning: /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/rcawp.pl:12:
+	Singleton variables: [File1,N]
+[0m[31;1mERROR: /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/rcawp.pl:12:
+	Full stop in clause-body?  Cannot redefine ,/2
+[0m[31mWarning: /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/mergetexttobrdict.pl:18:
+	Clauses of use_module/1 are not together in the source-file
+	  Earlier definition at /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/la_strings.pl:3
+	  Current predicate: phrase_from_file_s/2
+	  Use :- discontiguous use_module/1. to suppress this message
+[0m[31;1mERROR: /usr/local/Cellar/swi-prolog/8.0.2_2/libexec/lib/swipl/library/edit.pl:36:
+	catch/3: Undefined procedure: module/2
+	  However, there are definitions for:
+	        module/1
+[0m[31mWarning: /usr/local/Cellar/swi-prolog/8.0.2_2/libexec/lib/swipl/library/edit.pl:36:
+	Goal (directive) failed: user:module(prolog_edit,[edit/1,edit/0])
+[0m[1mtrue.[0m
+
+['meditationnoreplace'].
+
+
+[31mWarning: /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/mergetexttobrdict.pl:18:
+	Clauses of use_module/1 are not together in the source-file
+	  Earlier definition at /Users/luciangreen/Dropbox/GitHub/Combination-Algorithm-Writer-with-Predicates/la_strings.pl:3
+	  Current predicate: phrase_from_file_s/2
+	  Use :- discontiguous use_module/1. to suppress this message
+[0m[31;1mERROR: /usr/local/Cellar/swi-prolog/8.0.2_2/libexec/lib/swipl/library/edit.pl:36:
+	catch/3: Undefined procedure: module/2
+	  However, there are definitions for:
+	        module/1
+[0m[31mWarning: /usr/local/Cellar/swi-prolog/8.0.2_2/libexec/lib/swipl/library/edit.pl:36:
+	Goal (directive) failed: user:module(prolog_edit,[edit/1,edit/0])
+[0m[1mtrue.[0m
+
+rcawp1(1).
+
+
