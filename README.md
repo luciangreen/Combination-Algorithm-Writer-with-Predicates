@@ -55,6 +55,22 @@ Example Output
 N = S, S = 2.
 ```
 
+Use RCAWP (Random Combination Algorithm Writer with Predicates) to generate random algorithms with predicates.
+Example
+```
+['meditationnoreplace'].
+N is 1, rcawp1(N).
+```
+Example Output
+```
+[[[n,function0],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+
+...trace of algorithm...
+
+% 2,725,280 inferences, 1.772 CPU in 1.936 seconds (92% CPU, 1537945 Lips)
+[./rcawp20197211823.txt,not t2b2'ed out.  Please do manually.]
+```
+
 **Note:**
 
 Use ":-" instead of :-.
