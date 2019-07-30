@@ -11,7 +11,7 @@ Please read the following instructions on how to install the project on your com
 
 # Prerequisites
 
-None
+Install List Prolog Interpreter Repository (https://github.com/luciangreen/listprologinterpreter) first.
 
 # Installing
 
