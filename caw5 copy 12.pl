@@ -473,37 +473,58 @@ append_list(A,List,B) :-
 
 **/
 
-eliminate_unused_predicates(Program1,Algorithms1,Algorithms2) :-
+eliminate_unused_predicates(Program1a,Algorithms1a,Algorithms2) :-
 	%% System calls and mode arities
 	%%System_calls=[[is,1,1],[+,2,1],[=,2,1],[wrap,1,1],
 	%%[unwrap,1,1],[head,1,1],[tail,1,1],[member,1,1],
 	%%[delete,2,1],[append,2,1]], %% Ignore whether system calls are in Program and Algorithm - the interpreter will have detected whether system and user predicates clash earlier
-	Program1=[[[n, PredicateName], Arguments, ":-", _Body]],
+
+	Program1a=[[[n, PredicateName], Arguments, ":-", _Body]],
 	length(Arguments,ArgumentsLength),
 	Start=[[[n,PredicateName],ArgumentsLength]],
+		convert_to_grammar_part1(Program1a,[],_Program1b,Program1),
 	%% Find calls in Program
+	%%writeln([program1,Program1]),
 	find_calls1(Start,Program1,[],Program2),
+	%%writeln([program2,Program2]),
 	%% Find calls in Algorithm
+		convert_to_grammar_part1(Algorithms1a,[],_Algorithms1b,Algorithms1),
+	%%writeln([algorithms1,Algorithms1]),
 	find_calls1(Program2,Algorithms1,[],Algorithms3),
+	%%writeln([algorithms3,Algorithms3]),
 	append(Program2,Algorithms3,Rules),
 	%% Eliminate user predicates mentioned in Program and Algorithms in Algorithms 
-	eliminate_unused_predicates(Rules,Algorithms1,[],
+	eliminate_unused_predicates1(Rules,Algorithms1,[],
 		Algorithms2).
 	
 find_calls1(_,[],Program,Program) :- !.
 find_calls1(Program0,Program1,Program2,Program3) :-
-	Program1=[Program4|Program5],
-	((Program4=[[n,PredicateName],Arguments,":-",Program6],
+	Program1=[[_Program4a,Program4]|Program5],
+	%% The first predicate in Program4 only is needed to find the calls x
+	(findall(Program7a,(((member([[n,PredicateName],Arguments,":-",Program6],Program4)->true;Program4=[[n,PredicateName],Arguments,":-",Program6]),
 	length(Arguments,ArgumentsLength),
 	Item=[[n,PredicateName],ArgumentsLength],
-	member(Item,Program0))->
-	(find_calls2(Program6,[],Program7),
+	(member(Item,Program0)->Program6=Program6a;Program6a=[])%%->true;
+	%%Item=Program0
+	),
+	(find_calls2(Program6a,[],Program7a))),[Program7])),
+	%%append(Program2,Program7,Program8),
+	%%append(Program0,Program7,Program01));
+	%%(Program8=Program2,Program01=Program0)),
 	append(Program2,Program7,Program8),
-	append(Program0,Program7,Program01));
-	(Program8=Program2,Program01=Program0)),
+	append(Program0,Program7,Program01),
 	find_calls1(Program01,Program5,Program8,Program3).
 	
 find_calls2([],Program,Program) :- !.
+/**
+find_calls2(Program1,Program2,Program3) :-
+	Program1=[Line|Program41],
+	Line=[[n,code]|Program42],
+	find_calls2(Program41,Program2,Program5),
+	append(Program5,Program42,Program6),
+	find_calls2(Program6,[],Program3).
+**/
+
 find_calls2(Program1,Program2,Program3) :-
 	Program1=[Line|Program4],
 	(Line=[[n,PredicateName],Arguments]->
@@ -513,20 +534,26 @@ find_calls2(Program1,Program2,Program3) :-
 	append(Program2,Item,Program5),
 	find_calls2(Program4,Program5,Program3).
 
-eliminate_unused_predicates(_Rules,[],Algorithms,Algorithms) :- !.
-eliminate_unused_predicates(Rules,Algorithms1,Algorithms2,Algorithms3) :-
-	Algorithms1=[Algorithms4|Algorithms5],
-	(Algorithms4=[[n,PredicateName],Arguments,":-",_Program6]->
-	length(Arguments,ArgumentsLength);
-	(Algorithms4=[[n,PredicateName],Arguments2]->
-		length(Arguments2,ArgumentsLength);
-		(Algorithms4=[[n,PredicateName]],ArgumentsLength=0))),
+eliminate_unused_predicates1(_Rules,[],Algorithms,Algorithms) :- !.
+eliminate_unused_predicates1(Rules,Algorithms1,Algorithms2,Algorithms3) :-
+	Algorithms1=[[Algorithms4a,Algorithms4]|Algorithms5],
+	%%(Algorithms4a=[]->
+		%%eliminate_unused_predicates1(Rules,Algorithms5,Algorithms2,
+		%%Algorithms3),%%;
+((findall(Algorithms6a,(((member(Algorithms4a1,Algorithms4),Algorithms4a1=[[n,_]|_])->true;Algorithms4a1=Algorithms4),	((Algorithms4a1=[[n,PredicateName],Arguments,":-",_Program6],
+%%Algorithms4a1=[[n,PredicateName],Arguments])->
+	length(Arguments,ArgumentsLength))->true;
+	(Algorithms4a1=[[n,PredicateName],Arguments2],
+		length(Arguments2,ArgumentsLength)->true;
+		(Algorithms4a1=[[n,PredicateName]],ArgumentsLength=0))),
 	Item=[[n,PredicateName],ArgumentsLength],
 	(member(Item,Rules)->
+		(Algorithms4a=[]->Algorithms2=Algorithms6a;
 		append(Algorithms2,
-		[Algorithms4],Algorithms6);
-		Algorithms6=Algorithms2),
-	eliminate_unused_predicates(Rules,Algorithms5,Algorithms6,
-		Algorithms3).
-
-	
+		[Algorithms4a],Algorithms6a));
+		Algorithms6a=Algorithms2)),Algorithms6b)),
+		Algorithms6b=[Algorithms6c|_],
+		(var(Algorithms6c)->Algorithms6=[];Algorithms6=Algorithms6c),
+		%%length(Algorithms4,Count)),
+	eliminate_unused_predicates1(Rules,Algorithms5,Algorithms6,
+		Algorithms3)).

@@ -17,6 +17,7 @@ rcawp1(N) :-
 	
 rcawp2(0) :- !.
 rcawp2(Count1) :-
+	writeln([algorithm,Count1]),
 	random(N1),N2 is round(N1*1000),
 	random(N3),N4 is round(N3*1000),
 	N5 is N2+N4,
