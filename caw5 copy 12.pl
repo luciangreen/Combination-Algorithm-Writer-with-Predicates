@@ -58,6 +58,7 @@ caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputV
 	%%optimise(Program1,InputVars1,_InputVars3,PenultimateVars,Program4), %% IV2->3
 %%writeln([optimise(Program1,InputVars1,InputVars3,PenultimateVars,Program4)]),
 	append(Program1,Program3,Program5),
+	not(Program5=[]),
 	append(InputVars1,OutputVars,Vars2),
 	Program22=[
         [[n,PredicateName],Vars2,":-",
@@ -65,12 +66,13 @@ caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputV
         ]
         ],
 	eliminate_unused_predicates(Program22,Algorithms1,Algorithms2),
-	
+	%%Algorithms2=[[[n,_],_,_,Body]|_],length(Body,1),
 	%%(Program22=[[[n,function0],[[v,a],[v,b],[v,c]],":-",[[[n,function2],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]->writeln(eliminate_unused_predicates(Program22,Algorithms1,Algorithms2));true),
 	
 	append(Program22,Algorithms2,Program2),
 	debug(Debug),
 	%%writeln([program2,Program2]),
+	%%writeln(["Press c."]),(get_single_char(97)->true;true),
 %%writeln([interpret(Debug,Query,Program2,OutputVarList)]),
 	%%writeln(interpret(Debug,Query,Program2,VarLists)),
 	%%interpret(Debug,Query,Program2,OutputVarList).
@@ -90,6 +92,8 @@ caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2
 %%writeln([rule(RuleName,NumInputs,NumOutputs,VarList,VarList2,Rule)]),
 	rule(RuleName,NumInputs,NumOutputs,InputVars2,InputVars4,VarList,VarList2,Rule), %% InputVars5->InputVars2
 %%writeln([rule(RuleName,NumInputs,NumOutputs,InputVars1,InputVars3,VarList,VarList2,Rule)]),
+	%%writeln(not(member(Rule,Program1))),
+	not(member(Rule,Program1)),
 	append(Program1,[Rule],Program3),
 %%writeln([inputVars3,InputVars3]),
 %%InputVars2=InputVars3,
@@ -501,7 +505,7 @@ find_calls1(_,[],Program,Program) :- !.
 find_calls1(Program0,Program1,Program2,Program3) :-
 	Program1=[[_Program4a,Program4]|Program5],
 	%% The first predicate in Program4 only is needed to find the calls x
-	(findall(Program7a,(((member([[n,PredicateName],Arguments,":-",Program6],Program4)->true;Program4=[[n,PredicateName],Arguments,":-",Program6]),
+	(findall(Program7a,(((member([[n,PredicateName],Arguments,":-",Program6],Program4)->true;((member([[n,PredicateName],Arguments],Program4),Program6=[])->true;Program4=[[n,PredicateName],Arguments,":-",Program6])),
 	length(Arguments,ArgumentsLength),
 	Item=[[n,PredicateName],ArgumentsLength],
 	(member(Item,Program0)->Program6=Program6a;Program6a=[])%%->true;
