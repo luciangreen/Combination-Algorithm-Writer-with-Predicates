@@ -21,7 +21,7 @@ rcawp2(Count1) :-
 	random(N1),N2 is round(N1*1000),
 	random(N3),N4 is round(N3*1000),
 	N5 is N2+N4,
-	caw00(off,function0,[],5,7,[[[[[v,a],N2],[[v,b],N4]],
+	caw00(off,function0,[],1,4,[[[[[v,a],N2],[[v,b],N4]],
 		[[[v,c],N5]],true]],[],Program),
 	writeln(Program),
 	writeln(""),
