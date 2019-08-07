@@ -39,6 +39,7 @@ test(
 		  ],
 		  
 		  [[[n,noun],2,0],"->",["apple"]],
+%% 2 inputs and 0 outputs in internal grammar part form for grammars.  Add any inputs to 2 and any outputs to 0.
 
 %%**
 		  [[[n,grammar2],1,0],[[v,s]],":-",
