@@ -18,7 +18,7 @@ Install List Prolog Interpreter Repository (https://github.com/luciangreen/listp
 * Download this repository.
 * In SWI-Prolog, enter:
 ```
-['listprolog'].
+['cawplistprolog'].
 ```
 * Running
 Example
