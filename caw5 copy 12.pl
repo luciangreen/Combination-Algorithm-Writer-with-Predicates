@@ -1,4 +1,6 @@
 :- dynamic debug/1.
+:- dynamic totalvars/1.
+:- dynamic outputvars/1.
 
 /**
 
@@ -14,44 +16,44 @@ Notes:
 **/
 
 :- include('algdict.pl').
-:- include('remove_duplicate_predicates.pl').
+%%:- include('remove_duplicate_predicates.pl').
 
 caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,VarLists,Program1,Program2B) :-
-	test(PredicatesA0),
+	test(PredicatesA),
 	%% remove duplicate predicates
-	remvdup(PredicatesA0,[],PredicatesA),
+	%%remvdup(PredicatesA0,[],PredicatesA),
 	split3(PredicatesA,[],Rules2),
 	split2(PredicatesA,[],Predicates),
 	%%writeln([Rules2,Predicates]),
 	append(Rules1,Rules2,Rules3),
 
 	retractall(debug(_)),
-    	assertz(debug(Debug)),
+	assertz(debug(Debug)),
 	retractall(totalvars(_)),
-    	assertz(totalvars(TotalVars)),
+   assertz(totalvars(TotalVars)),
 	VarLists=[VarLists1|VarLists2],
 	findall(Program2A,caw0(Predicates,PredicateName,
-		Rules3,MaxLength,
-		VarLists1,Program1,Program2A),Program2),
+	Rules3,MaxLength,
+	VarLists1,Program1,Program2A),Program2),
 	member(Program2B,Program2),
 	aggregate_all(count,(member(Item,VarLists2),
 	caw0(Predicates,PredicateName,Rules3,MaxLength,
-		Item,Program1,Program2B)),Count),length(VarLists2,Count). %%Predicates->PredicatesA x
+	Item,Program1,Program2B)),Count),length(VarLists2,Count). %%Predicates->PredicatesA x
 
 caw0(Algorithms,PredicateName,Rules,MaxLength,VarLists,Program1,Program2) :-
 	VarLists=[InputVarList,OutputVarList,Positivity],
 	varnames(InputVarList,[],InputVars,[],InputValues),
 	varnames(OutputVarList,[],OutputVars,[],_OutputValues),
 	retractall(outputvars(_)),
-    	assertz(outputvars(OutputVars)),
-append(InputVars,OutputVars,Vars11),
+   assertz(outputvars(OutputVars)),
+	append(InputVars,OutputVars,Vars11),
 %%Vars11=InputVars,
 %%Vars12=InputVars,
 	append(InputValues,OutputVars,Vars2),
 	%%append(InputValues,OutputValues,Values),
 	Query=[[n,PredicateName],Vars2],
 	caw(Algorithms,Query,PredicateName,Rules,MaxLength,Vars11,InputVars,InputVars,_,OutputVarList,OutputVars,Positivity,Program1,Program2).
-caw(_,_,_,_,0,_,_,_,_,_,_,_,_,_) :- fail, !.
+caw(_,_,_,_,0,_,_,_,_,_,_,_,_,_) :- fail, !. %% Turn off fail,! to have all solutions
 caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputVars2,_InputVarsa,VarLists,OutputVars,Positivity,Program1,Program2) :-
 	addrules(InputVars2,OutputVars,OutputVars,[],_PenultimateVars,[],Program3),
 %%writeln([addrules(InputVars2,OutputVars,OutputVars,[],PenultimateVars,[],Program3)]),	
@@ -78,7 +80,7 @@ caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputV
 	%%interpret(Debug,Query,Program2,OutputVarList).
 	%%aggregate_all(count,(member(Item,VarLists),
 	(Positivity=true->
-	interpret(Debug,Query,Program2,VarLists);
+	interpret(Debug,Query,Program2,[VarLists]);
 	not(interpret(Debug,Query,Program2,VarLists))),!.%%),Count),
 	%%length(OutputVarList,Count),!.
 caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,InputVars3,VarLists,OutputVars,Positivity,Program1,Program4) :-
