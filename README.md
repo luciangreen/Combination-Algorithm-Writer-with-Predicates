@@ -26,50 +26,50 @@ Example
 
 VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail.
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,c]]]]]]
 `
 
 Example
 `caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[],Program),writeln(Program).`
 
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
 
 Example
 `caw00(off,f,[[append,2,1],[delete,2,1],[head,1,1],[tail,1,1],[member,1,1]],3,5,[[[[[v,a],1]],[[[v,b],1]],true]],[],Program),writeln(Program).`
 
 Example Output
-`[[[n,f],[[v,a],[v,b]],:-,[[[n,=],[[v,b],[v,a]]]]]]`
+`[[[n,f],[[v,a],[v,b]],":-",[[[n,=],[[v,b],[v,a]]]]]]`
 
 
 Example
 `caw00(off,function3,[[[n,+],2,1]],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[],Program),writeln(Program).`
 
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,d]]],[[n,+],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,d]]],[[n,+],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]]]`
 
 
 Example
 `caw00(off,function3,[[[n,+],2,1],[[n,*],2,1]],5,7,[[[[[v,a],2],[[v,b],2]],[[[v,c],4]]]],[],Program),writeln(Program).`
 
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
 and
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,*],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,*],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
 
 
 Example
 `caw00(off,function3,[[[n,+],2,1],[[n,*],2,1]],5,7,[[[[[v,a],2],[[v,b],2]],[[[v,c],4]],true],[[[[v,a],1],[[v,b],1]],[[[v,c],2]],fail]],[],Program),writeln(Program).`
 
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,*],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,*],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]`
 
 
 You can enter a partially complete predicate as the second last argument and the algorithm will complete the algorithm if possible:
 Example
 `caw00(off,function3,[],5,7,[[[[[v,a],1],[[v,b],1]],[[[v,c],3]],true]],[[[n,=],[[v,a],[v,b]]]],Program),writeln(Program).`
 Example Output
-`[[[n,function3],[[v,a],[v,b],[v,c]],:-,[[[n,=],[[v,a],[v,b]]],[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
+`[[[n,function3],[[v,a],[v,b],[v,c]],":-",[[[n,=],[[v,a],[v,b]]],[[n,function1],[[v,a],[v,b],[v,d]]],[[n,function1],[[v,a],[v,d],[v,e]]],[[n,=],[[v,c],[v,e]]]]],[[n,function1],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,c]]]]]]`
 
 
 Try CAWP regression tests (in cawpverify.pl):
@@ -92,7 +92,7 @@ N is 1, rcawp1(N).
 ```
 Example Output
 ```
-[[[n,function0],[[v,a],[v,b],[v,c]],:-,[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],:-,[[[n,+],[[v,a],[v,b],[v,c]]]]]]
+[[[n,function0],[[v,a],[v,b],[v,c]],":-",[[[n,function1],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]],[[n,function1],[[v,a],[v,b],[v,c]],":-",[[[n,+],[[v,a],[v,b],[v,c]]]]]]
 
 ...trace of algorithm...
 
