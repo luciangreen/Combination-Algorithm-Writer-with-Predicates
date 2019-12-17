@@ -3,16 +3,12 @@
 :- dynamic outputvars/1.
 
 /**
-
 caw00(off,function3,[],5,7,[[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,2]],true],[[[a,1],[b,1]],[[c,1]],fail],[[[a,1],[b,1]],[[c,1]],fail]],[],Program),writeln(Program).
-
 VarLists is in format list of [InputVarList,OutputVarList,Positivity], where these are specification lines that are either Positivity=true or fail
-
 Notes:
 - true specification line in first position of varlists, otherwise will try all except the specification line
 - manually write a,a in algdict in a,b :- a,a,b because cawp would take too long finding all combinations including a,a
 - give argument values in order 3 2 1 not 1 2 3 when adding, or will try 1+1+1 instead of 3 at first
-
 **/
 
 :- include('algdict.pl').
@@ -71,20 +67,28 @@ caw(Algorithms1,Query,PredicateName,_Rules,_MaxLength,_VarList,InputVars1,InputV
 	%%Algorithms2=[[[n,_],_,_,Body]|_],length(Body,1),
 	%%(Program22=[[[n,function0],[[v,a],[v,b],[v,c]],":-",[[[n,function2],[[v,a],[v,b],[v,d]]],[[n,=],[[v,c],[v,d]]]]]]->writeln(eliminate_unused_predicates(Program22,Algorithms1,Algorithms2));true),
 	
-	append(Program22,Algorithms2,Program2),
+	append(Algorithms2,Program22,Program2),
 	debug(Debug),
 	%%writeln([program2,Program2]),
 	%%writeln(["Press c."]),(get_single_char(97)->true;true),
-%%writeln([interpret(Debug,Query,Program2,OutputVarList)]),
-	%%writeln(interpret(Debug,Query,Program2,VarLists)),
+	%%writeln([interpret(Debug,Query,Program2,OutputVarList)]),
+writeln(interpret(Debug,Query,Program2,[VarLists])),
 	%%interpret(Debug,Query,Program2,OutputVarList).
 	%%aggregate_all(count,(member(Item,VarLists),
 	(Positivity=true->
-	interpret(Debug,Query,Program2,[VarLists]);
-	not(interpret(Debug,Query,Program2,VarLists))),!.%%),Count),
+		catch(call_with_time_limit(0.05, 
+		interpret(Debug,Query,Program2,[VarLists])),
+      time_limit_exceeded,
+      fail);
+	catch(call_with_time_limit(0.05, 
+		not(interpret(Debug,Query,Program2,[VarLists]))),
+      time_limit_exceeded,
+      fail) 
+
+),!.%%),Count),
 	%%length(OutputVarList,Count),!.
 caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,InputVars3,VarLists,OutputVars,Positivity,Program1,Program4) :-
-%%writeln([caw(Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,OutputVarList,OutputVars,Program1,Program4)]),
+writeln([caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2,InputVars3,VarLists,OutputVars,Positivity,Program1,Program4)]),
 	MaxLength2 is MaxLength - 1,
 	%%reverse(InputVars2,InputVars5),
 
@@ -93,9 +97,10 @@ caw(Algorithms,Query,PredicateName,Rules,MaxLength,VarList,InputVars1,InputVars2
 %%writeln([member([RuleName,NumInputs,NumOutputs],Rules)]),
 %%writeln([rule(RuleName,NumInputs,NumOutputs,VarList,VarList2,Rule)]),
 	rule(RuleName,NumInputs,NumOutputs,InputVars2,InputVars4,VarList,VarList2,Rule), %% InputVars5->InputVars2
-%%writeln([rule(RuleName,NumInputs,NumOutputs,InputVars1,InputVars3,VarList,VarList2,Rule)]),
+%%writeln([rule(RuleName,NumInputs,NumOutputs,InputVars2,InputVars4,VarList,VarList2,Rule)]),
 	%%writeln(not(member(Rule,Program1))),
-	not(member(Rule,Program1)),
+	Rule=[[n,A]|_],
+	not(member([[n,A]|_],Program1)),
 	append(Program1,[Rule],Program3),
 %%writeln([inputVars3,InputVars3]),
 %%InputVars2=InputVars3,
@@ -194,13 +199,10 @@ findrulesflowingtopv2(_Program0,Rule,InputVars1,InputVars2,Var,Rules1,Rules2,IV1
 	(not(member(Rule,Rules1))->
 	append(Rules1,[Rule],Rules2);Rules2=Rules1),
 	subset(Rest,InputVars2),
-
 	intersection(Rest,InputVars1,Intersection),
 	length(Intersection,0),
-
 %%	not((member(Var2,Rest),
 %%	member(Var2,InputVars1))),
-
 	IV1Flag1=false.
 **/
 /**
@@ -214,17 +216,13 @@ findrulesflowingtopv2(Program0,Rule,InputVars1,InputVars2,Var,Rules1,Rules2,IV1F
 	
 	intersection(Rest,InputVars1,Intersection),
 	length(Intersection,0),
-
 %%	not((member(Var2,Rest),
 %%	member(Var2,InputVars1))),
-
 %%	delete(Program0,Rule,Program1),
-
 	IV1Flag2=false,
 	findrulesflowingtopv1(Program0,InputVars1,InputVars2,Rest,[],Rules4,IV1Flag3),
 	%%not(Rules4=[]),
 	iv1flagdisjunction(IV1Flag2,IV1Flag3,IV1Flag1),
-
 	append(Rules1,[Rule],Rules7),
 	append(Rules7,Rules4,Rules8),
 	unique1(Rules8,[],Rules2).
@@ -239,9 +237,7 @@ findrulesflowingtopv2(Rule,Program0,Program1,_Program2,InputVars1,InputVars,Var,
 	append(Rules1,[[PredicateName,Vars]],Rules3),
 	findrulesflowingtopv1(Program0,Program1,_Program2,InputVars1,InputVars,Rest,Rules3,Rules2,IV1Flag3),
 	iv1flagdisjunction(IV1Flag2,IV1Flag3,IV1Flag1).
-
 	%%findrulesflowingtopv2(Program5,Program2,Rest,Rules3,Rules2).
-
 **/
 iv1flagdisjunction(A,B,true) :-
 	(A=true); (B=true).
@@ -261,8 +257,6 @@ iv3s2(IV3,Rule,IV3s,IV3s1,IV3s2).
 	Rule=[_PredicateName,Vars],
 	restlast(Vars,[],_Rest,IV3),	
 	delete(IV3s1,IV3,IV3s2).
-
-
 findrulesflowingtopv1a(_,_,_,_,[],Rules,Rules).
 findrulesflowingtopv1a(Program1,Program2,InputVars1,InputVars2,Var,Rules1,Rules2) :-
 	atom(Var),
@@ -290,7 +284,6 @@ Program3=Program1,
 	append(Rules1,[[PredicateName,Vars]],Rules3),
 	subset(Rest,InputVars2)),
 	findrulesflowingtopv1a(Program3,Program2,InputVars1,InputVars2,Rest,Rules3,Rules2).
-
 %%->true;(Program2=Program1,Rules2=Rules1)).
 findrulesflowingtopv2a(Program1,Program2,InputVars1,InputVars,Var,Rules1,Rules2) :-
 	member([PredicateName,Vars],Program1),
@@ -314,12 +307,13 @@ restlast(Vars1,Rest1,Rest2,Last) :-
 
 
 rule(RuleName,InModes,OutModes,InputVars1,InputVars2,VarList,VarList2,Rule) :-
+writeln(rule(RuleName,InModes,OutModes,InputVars1,InputVars2,VarList,VarList2,Rule)),
 	get_members(InModes,InputVars1,[],Vars1),
 	rulea(OutModes,RuleName,Vars1,VarList,VarList2,
 		Rule,Vars2),
 	restlast(InputVars1,[],_,Last),
 	(equals_or(Vars1,Last)->true;equals_or(Vars2,Last)),
-	append(InputVars1,Vars2,InputVars2),!.
+	append(InputVars1,Vars2,InputVars2).
 
 member_functions(Rule,Algorithms,Item) :-
 	member(Item,Algorithms),
@@ -353,7 +347,6 @@ get_vars(OutModes1,VarList1,VarList2,Vars1,Vars2) :-
 	 get_vars(OutModes2,VarList3,VarList2,Vars3,Vars2),!.
 	
 /**
-
 rule(RuleName,1,1,InputVars1,InputVars2,VarList,VarList2,Rule) :-
 	member(Var,InputVars1),
 	rule2(RuleName,Var,VarList,VarList2,Rule,Var1),
@@ -361,7 +354,6 @@ rule(RuleName,1,1,InputVars1,InputVars2,VarList,VarList2,Rule) :-
 rule2(RuleName,Var,VarList,VarList2,Rule,Var1) :-
 	var(VarList,Var1,VarList2),
 	Rule=[RuleName,[Var,Var1]],!.
-
 rule(RuleName,1,2,InputVars1,InputVars2,VarList,VarList2,Rule) :-
         member(Var,InputVars1),
         rule3(RuleName,Var,VarList,VarList2,Rule,Vars),
@@ -370,7 +362,6 @@ rule3(RuleName,Var,VarList,VarList3,Rule,[Var1,Var2]) :-
         var(VarList,Var1,VarList2),
         var(VarList2,Var2,VarList3),
         Rule=[RuleName,[Var,Var1,Var2]],!.
-
 rule(RuleName,2,1,InputVars1,InputVars2,VarList,VarList2,Rule) :-
         member(Var,InputVars1),
         member(Vara,InputVars1),
@@ -379,7 +370,6 @@ rule(RuleName,2,1,InputVars1,InputVars2,VarList,VarList2,Rule) :-
 rule4(RuleName,Var,Vara,VarList,VarList2,Rule,Var1) :-
         var(VarList,Var1,VarList2),
         Rule=[RuleName,[Var,Vara,Var1]],!.
-
 rule(RuleName,2,2,InputVars1,InputVars2,VarList,VarList2,Rule) :-
         member(Var,InputVars),
         member(Vara,InputVars),
@@ -389,7 +379,6 @@ rule5(RuleName,Var,Vara,VarList,VarList3,Rule,[Var1,Var2]) :-
         var(VarList,Var1,VarList2),
         var(VarList2,Var2,VarList3),
         Rule=[RuleName,[Var,Vara,Var1,Var2]],!.
-
 **/
 
 %%var(Item,Var,Vars,Vars) :-
@@ -476,7 +465,6 @@ append_list(A,List,B) :-
 	List=[Item|Items],
 	append(A,[Item],C),
 	append_list(C,Items,B).
-
 **/
 
 eliminate_unused_predicates(Program1a,Algorithms1a,Algorithms2) :-
