@@ -1,6 +1,6 @@
 # Combination-Algorithm-Writer-with-Predicates
 
-(Please note: Deprecated. See updated <a href=="https://github.com/luciangreen/Combination-Algorithm-Writer-Multiple-Predicates">Combination-Algorithm-Writer-Multiple-Predicates</a> (a different repository) instead).
+(Please note: Deprecated. See updated <a href="https://github.com/luciangreen/Combination-Algorithm-Writer-Multiple-Predicates">Combination-Algorithm-Writer-Multiple-Predicates</a> (a different repository) instead).
 
  Combination Algorithm Writer with Predicates is a SWI-Prolog algorithm that finds combinations of predicates (in algdict.pl) that satisfy the given input and output.
 
