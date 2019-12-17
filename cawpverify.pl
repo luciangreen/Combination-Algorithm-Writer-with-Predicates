@@ -15,6 +15,8 @@ cawptest(Debug,NTotal1,NTotal2,Score1,Score2) :-
 	writeln(""),
 	cawptest(Debug,NTotal3,NTotal2,Score3,Score2),!.
 
+%% Test individual cases, Debug=trace=on or off, N=case number, Passed=output=result
+
 cawptest1(Debug,N,Passed) :-
 	cawptest2(N,MaxLength,TotalVars,Specifications,Program1),
 	%%writeln([cawptest2(N,Specifications,Program1)]),
