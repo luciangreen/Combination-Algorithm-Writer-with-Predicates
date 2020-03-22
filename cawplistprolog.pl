@@ -7,5 +7,5 @@
 :- include('cawpverify.pl').
 :- include('rcawp.pl').
 %%:- include('rcaw.pl').
-:- include('la_strings.pl').
+:- include('../listprologinterpreter/la_strings.pl').
 %%:- include('texttobr2.pl').
