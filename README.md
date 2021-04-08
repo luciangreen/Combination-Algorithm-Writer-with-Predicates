@@ -9,18 +9,34 @@ Combination Algorithm Writer is a SWI-Prolog algorithm that finds combinations o
 
 It verifies for no singletons.
 
-# Installation from List Prolog Package Manager (LPPM)
+# Prerequisites
 
-* Optionally, you can install from LPPM by installing <a href="https://www.swi-prolog.org/build/">SWI-Prolog</a> for your machine, downloading the <a href="https://github.com/luciangreen/List-Prolog-Package-Manager">LPPM Repository</a>,
+* Please download and install SWI-Prolog for your machine at `https://www.swi-prolog.org/build/`.
+
+# 1. Install manually
+
+Download <a href="http://github.com/luciangreen/Combination-Algorithm-Writer-with-Predicates/">this repository</a>.
+
+# 2. Or Install from List Prolog Package Manager (LPPM)
+
+* Download the <a href="https://github.com/luciangreen/List-Prolog-Package-Manager">LPPM Repository</a>:
+
 ```
 git clone https://github.com/luciangreen/List-Prolog-Package-Manager.git
 cd List-Prolog-Package-Manager
 swipl
+['lppm'].
+lppm_install("luciangreen","Combination-Algorithm-Writer-with-Predicates")
+halt
 ```
-loading LPPM with `['lppm'].` then installing the package by running `lppm_install("luciangreen","Combination-Algorithm-Writer-with-Predicates").`.
 
-Installation
-Load all files in the form:
+# Running
+
+* In Shell:
+`cd Combination-Algorithm-Writer-with-Predicates`
+`swipl`
+
+* Load all files in the form:
 ```
 ['lpi_caw_commands.pl'].
 ['listprologinterpreter1listrecursion4copy52'].
