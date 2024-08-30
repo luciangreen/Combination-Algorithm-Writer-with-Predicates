@@ -29,7 +29,8 @@ cd List-Prolog-Package-Manager
 swipl
 ['lppm'].
 lppm_install("luciangreen","Combination-Algorithm-Writer-with-Predicates").
-halt
+../
+halt.
 ```
 
 # Running
