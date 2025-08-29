@@ -2,15 +2,6 @@
 :- dynamic totalvars/1.
 :- dynamic outputvars/1.
 
-% Initialize neural network on startup
-:- initialization(init_neural_network_caw).
-
-init_neural_network_caw :-
-    (   current_predicate(init_neural_network/0) ->
-        init_neural_network
-    ;   true
-    ).
-
 caw00(Debug,PredicateName,Rules1,MaxLength,TotalVars,InputVarList,OutputVarList,Predicates1,Program1,Program2) :-
 	split3(Predicates1,[],Rules2),
 	split2(Predicates1,[],Predicates),
@@ -112,10 +103,7 @@ findrulesflowingtopv1(Program0,InputVars1,InputVars2,Vars1,Rules1,Rules2,IV1Flag
 findrulesflowingtopv20(_,[],_InputVars1,_InputVars2,_Var,Rules,Rules,false).
 findrulesflowingtopv20(Program0,Rules4,InputVars1,InputVars2,Var,Rules1,Rules2,IV1Flag1) :-
 	Rules4=[Rule|Rules],
-	(   findrulesflowingtopv2(Program0,Rule,InputVars1,InputVars2,Var,Rules1,Rules3,IV1Flag2) ->
-            true
-        ;   (Rules3=Rules1, IV1Flag2=false)
-        ),
+	(findrulesflowingtopv2(Program0,Rule,InputVars1,InputVars2,Var,Rules1,Rules3,IV1Flag2)->true;(Rules3=Rules1,IV1Flag2=false)),
 	%%delete(Program0,Rule,Program1),
 	findrulesflowingtopv20(Program0,Rules,InputVars1,InputVars2,Var,Rules3,Rules2,IV1Flag3),%%p1->0
 	iv1flagdisjunction(IV1Flag2,IV1Flag3,IV1Flag1).
@@ -145,21 +133,14 @@ findrulesflowingtopv2(Program0,Rule,InputVars1,InputVars2,Var,Rules1,Rules2,IV1F
 
 	%%(delete(Program0,Rule,Program3),
 	%%iv3s1(IV3s,Program3,IV3s,[]),
-	(   Length3>=1 ->
-            (   findrulesflowingtopv1(Program0,InputVars1,InputVars2,IV3s,[],Rules5,IV1Flag3),
-                not(Rules5=[])
-            )
-        ;   (Rules5=[], IV1Flag3=false)
-        ),
+	(Length3>=1->
+	(findrulesflowingtopv1(Program0,InputVars1,InputVars2,IV3s,[],Rules5,IV1Flag3),not(Rules5=[]));
+	(Rules5=[],IV1Flag3=false)),
 	iv1flagdisjunction(IV1Flag2,IV1Flag3,IV1Flag4),
 	%%->true; Rules5=[],IV1Flag1=IV1Flag4),
 	
-	(   (   findrulesflowingtopv1(Program0,InputVars1,InputVars2,IV1s,[],Rules6,IV1Flag5), %%iv1s->rest, etc
-                iv1flagdisjunction(IV1Flag4,IV1Flag5,IV1Flag1)
-            ) ->
-            true
-        ;   (Rules6=[], IV1Flag1=IV1Flag4)
-        ),
+	((findrulesflowingtopv1(Program0,InputVars1,InputVars2,IV1s,[],Rules6,IV1Flag5), %%iv1s->rest, etc
+	iv1flagdisjunction(IV1Flag4,IV1Flag5,IV1Flag1))->true;(Rules6=[],IV1Flag1=IV1Flag4)),
 
 	append([Rule],Rules1,Rules9),
 	append(Rules9,Rules5,Rules7),
